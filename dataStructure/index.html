@@ -1,0 +1,202 @@
+/* * @Author: abei * @Date: 2020-01-04 10:10:57 * @Last Modified by: abei * @Last Modified time:
+2020-01-04 10:10:57 */
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <script src="BinarySearchTree.js"></script>
+        <script src="stack.js"></script>
+        <script src="Queue.js"></script>
+        <script src="LinkedList.js"></script>
+        <link rel="stylesheet" href="index.css" />
+    </head>
+    <body>
+        <div class="wrap">
+            <div class="left">
+                <select name="" id="" class="sel" onchange="changeval(value)">
+                    <option value="0">二叉树(BinarySearchTree)</option>
+                    <option value="1">链表</option>
+                    <option value="2">队列</option>
+                    <option value="3">栈</option>
+                </select>
+                <p class="p">二叉树(BinarySearchTree)</p>
+                <div class="random">
+                    <p>
+                        <input
+                            type="text"
+                            class="inp"
+                            onchange="changeinp(value,'min')"
+                            placeholder="最小值"
+                        />
+                        <input
+                            type="text"
+                            class="inp"
+                            onchange="changeinp(value,'max')"
+                            placeholder="最大值"
+                        />
+                        <button onclick="random()">随机</button>
+                    </p>
+                    <div class="random-box"></div>
+                    <p>
+                        <button onclick="add()">添加</button>
+                        <button onclick="remove()">删除</button>
+                        <button onclick="clears()">清空</button>
+                    </p>
+                </div>
+                <div class="box">
+                    <select name="" id="" class="sel" onchange="changesort(value)">
+                        <!-- 这里只做了一个中序遍历的功能  动态图这里写的前遍历是不对的  只有二叉树有这些  其他的直接遍历就好-->
+                        <option value="0">先遍历</option>
+                        <option value="1">中序遍历</option>
+                        <option value="2">后遍历</option>
+                    </select>
+                    <div class="box-box"></div>
+                </div>
+            </div>
+            <div class="right">
+                <p>
+                    <input type="text" placeholder="要查找的值" onchange="get(value)" />
+                    <button onclick="btn()">查找</button>
+                </p>
+                <div class="inner"></div>
+            </div>
+        </div>
+        <script>
+            const stack = new Stack();
+            const queue = new Queue();
+            const binarySearchTree = new BinarySearchTree();
+            const linkedList = new LinkedList();
+            let p = document.getElementsByClassName('p')[0];
+            let randomBox = document.getElementsByClassName('random-box')[0];
+            let inner = document.getElementsByClassName('inner')[0];
+            let box = document.getElementsByClassName('box-box')[0];
+            changeval = value => {
+                if (value === '0') {
+                    p.innerHTML = '二叉树(BinarySearchTree)';
+                } else if (value === '1') {
+                    p.innerHTML = '链表';
+                } else if (value === '2') {
+                    p.innerHTML = '队列';
+                } else if (value === '3') {
+                    p.innerHTML = '栈';
+                }
+            };
+            let min = 0;
+            let max = 0;
+            let arr = [];
+            let arr1 = [];
+            let val = null;
+            changeinp = (value, type) => {
+                if (type === 'min') {
+                    min = value;
+                } else if (type === 'max') {
+                    max = value;
+                }
+            };
+            random = () => {
+                arr = [];
+                for (let i = 0; i < 5; i++) {
+                    let num = Math.floor(Math.random() * (max - min + 1) + min);
+                    arr.push(num);
+                }
+                randomBox.innerHTML = arr;
+                clears();
+            };
+            // 添加
+            add = () => {
+                if (p.innerHTML === '二叉树(BinarySearchTree)') {
+                    arr.forEach(item => {
+                        binarySearchTree.insert(item);
+                    });
+                } else if (p.innerHTML === '链表') {
+                    arr.forEach(item => {
+                        linkedList.append(item);
+                    });
+                    arr1 = linkedList.toArray();
+                } else if (p.innerHTML === '队列') {
+                    arr.forEach(item => {
+                        queue.push(item);
+                    });
+                } else if (p.innerHTML === '栈') {
+                    arr.forEach(item => {
+                        stack.push(item);
+                    });
+                }
+            };
+
+            // 删除
+            remove = () => {
+                if (p.innerHTML === '二叉树(BinarySearchTree)') {
+                    console.log('暂时没有该功能');
+                } else if (p.innerHTML === '链表') {
+                    linkedList.remove(arr.length - 1);
+                    arr1 = linkedList.toArray();
+                } else if (p.innerHTML === '队列') {
+                    queue.shift(arr.length - 1);
+                    arr1 = queue.toArray();
+                } else if (p.innerHTML === '栈') {
+                    stack.pop(arr.length - 1);
+                    arr1 = stack.toArray();
+                }
+            };
+
+            // 清空
+            clears = () => {
+                if (p.innerHTML === '二叉树(BinarySearchTree)') {
+                    arr1 = binarySearchTree.clear();
+                } else if (p.innerHTML === '链表') {
+                    linkedList.clear();
+                    arr1 = linkedList.toArray();
+                } else if (p.innerHTML === '队列') {
+                    arr1 = queue.clear();
+                } else if (p.innerHTML === '栈') {
+                    arr1 = stack.clear();
+                }
+            };
+            // 排序
+            changesort = value => {
+                box.innerHTML = [];
+                if (p.innerHTML === '二叉树(BinarySearchTree)') {
+                    if (value === '1') {
+                        arr1 = binarySearchTree.middleSort();
+                        box.innerHTML = arr1;
+                    }
+                } else if (p.innerHTML === '链表') {
+                    if (value === '1') {
+                        arr1 = linkedList.sorts();
+                        box.innerHTML = arr1;
+                    }
+                } else if (p.innerHTML === '队列') {
+                    if (value === '1') {
+                        arr1 = queue.sorts();
+                        box.innerHTML = arr1;
+                    }
+                } else if (p.innerHTML === '栈') {
+                    if (value === '1') {
+                        arr1 = stack.sorts();
+                        box.innerHTML = arr1;
+                    }
+                }
+            };
+            // 查找
+            get = value => {
+                val = value;
+            };
+            // btn
+            btn = () => {
+                let flag = arr1.some(item => {
+                    return item == val;
+                });
+                if (flag) {
+                    inner.innerHTML = '找到了';
+                } else {
+                    inner.innerHTML = '没找到';
+                }
+                return inner.innerHTML;
+            };
+        </script>
+    </body>
+</html>
